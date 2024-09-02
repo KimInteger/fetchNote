@@ -1,14 +1,16 @@
 'use client';
 
-import React, { ReactEventHandler, ReactNode, useState } from 'react';
-import naviItem from './naviLiteral/naviItem';
+import React, { useState } from 'react';
+import { naviItem, naviRouteContent } from './naviLiteral/naviItem';
 
 const NavigateBar: React.FC = () => {
-  const [viewContent, setViewContent] = useState<string>(naviItem[0]);
+  const [viewContent, setViewContent] = useState<keyof typeof naviRouteContent>(
+    naviItem[0],
+  );
 
-  const navi: string[] = naviItem;
+  const navi: Array<keyof typeof naviRouteContent> = naviItem;
 
-  const changeContent = (item: string) => {
+  const changeContent = (item: keyof typeof naviRouteContent) => {
     setViewContent(item);
   };
 
@@ -28,7 +30,7 @@ const NavigateBar: React.FC = () => {
           ))}
         </ul>
       </div>
-      <div>{viewContent === naviItem[0] && <div>야호</div>}</div>
+      {naviRouteContent[viewContent] || <div>페이지를 찾을 수 없습니다.</div>}
     </div>
   );
 };
