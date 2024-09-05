@@ -9,8 +9,6 @@ const LoginForm = () => {
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
 
-    console.log('Submitting login form:', { email, password });
-
     try {
       const response = await fetch('/api/login', {
         method: 'POST',
@@ -18,14 +16,12 @@ const LoginForm = () => {
         body: JSON.stringify({ email, password }),
       });
 
-      console.log('Response received:', response);
-
       const data = await response.json();
-      console.log('Response data:', data);
 
       if (response.ok) {
-        console.log('Login successful, redirecting...');
-        window.location.href = '/'; // 로그인 성공 후 홈으로 리디렉션
+        // JWT 토큰을 localStorage에 저장
+        localStorage.setItem('token', data.token);
+        window.location.href = '/'; // 로그인 성공 후 리디렉션
       } else {
         console.error('Login failed:', data.error);
       }
