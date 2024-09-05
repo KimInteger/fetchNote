@@ -40,14 +40,6 @@ const RegisterForm = () => {
           required
         />
       </label>
-      <label>
-        Admin:
-        <input
-          type="checkbox"
-          checked={admin}
-          onChange={() => setAdmin(!admin)}
-        />
-      </label>
       <button type="submit">Register</button>
     </form>
   );
