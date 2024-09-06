@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import '../styles/tictactoeField.css';
 import { winConditions } from './lib/winConditions';
 
 const TicTacToeField: React.FC = () => {
@@ -84,19 +83,28 @@ const TicTacToeField: React.FC = () => {
   }
 
   return (
-    <div className="tictactoeField">
+    <div className="flex flex-col items-center">
       <h2>{winner ? `${winner}의 승리입니다!` : `${currentPlayer}의 차례`}</h2>
-      <div className="board">
+      <div className="grid grid-cols-3 grid-rows-3 gap-1 mt-5 bg-gray-800 p-1.5 rounded-lg">
         {gameState.map((value, index) => (
-          <div key={index} className="block" onClick={() => handleClick(index)}>
+          <div
+            key={index}
+            className="w-24 h-24 bg-white flex justify-center items-center text-2xl font-bold border border-black cursor-pointer hover:bg-gray-200"
+            onClick={() => handleClick(index)}
+          >
             {value}
           </div>
         ))}
       </div>
       {winner && (
-        <div className="modal">
+        <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white p-5 shadow-lg text-center rounded-lg">
           <h2>{`${winner}의 승리입니다!`}</h2>
-          <button onClick={resetGame}>다시하기</button>
+          <button
+            onClick={resetGame}
+            className="px-5 py-2 mt-2 text-lg cursor-pointer"
+          >
+            다시하기
+          </button>
         </div>
       )}
     </div>
