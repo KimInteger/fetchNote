@@ -1,3 +1,4 @@
+import TicTacToeField from '../../minigameAssemble/tictactoe/gameBoard/playField';
 import WriteFieldSection from '../../writeField/fieldSection';
 
 const naviItem: Array<keyof typeof naviRouteContent> = [
@@ -8,7 +9,7 @@ const naviItem: Array<keyof typeof naviRouteContent> = [
 
 const naviRouteContent = {
   공지사항: <WriteFieldSection />,
-  대기실: <p>대기실임</p>,
+  대기실: <TicTacToeField />,
   잡담게시판: <p>잡담임</p>,
 };
 
