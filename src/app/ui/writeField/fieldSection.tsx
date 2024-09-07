@@ -1,15 +1,36 @@
 'use client';
 
-import { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { jwtDecode, JwtPayload } from 'jwt-decode';
+
+// 사용 시
 
 const WriteFieldSection: React.FC = () => {
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
+  const [isAdmin, setIsAdmin] = useState(false);
+
+  interface CustomJwtPayload extends JwtPayload {
+    admin?: boolean;
+  }
+
+  useEffect(() => {
+    // JWT 토큰을 가져와서 admin 상태 확인
+    const token = localStorage.getItem('token');
+
+    if (token) {
+      try {
+        const decoded = jwtDecode<CustomJwtPayload>(token);
+        setIsAdmin(decoded.admin || false);
+      } catch (error) {
+        console.error('Invalid token:', error);
+      }
+    }
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // JWT 토큰을 localStorage에서 가져옵니다.
     const token = localStorage.getItem('token');
     if (!token) {
       console.error('No token found');
@@ -20,7 +41,7 @@ const WriteFieldSection: React.FC = () => {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`, // JWT 토큰을 Authorization 헤더에 포함
+        Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify({ title, content }),
     });
@@ -28,6 +49,10 @@ const WriteFieldSection: React.FC = () => {
     const data = await response.json();
     console.log('Post saved:', data);
   };
+
+  if (!isAdmin) {
+    return <p>글 작성 권한이 없습니다.</p>;
+  }
 
   return (
     <div className="w-full max-w-lg mx-auto p-4">
@@ -49,7 +74,7 @@ const WriteFieldSection: React.FC = () => {
             onChange={(e) => setContent(e.target.value)}
             required
             rows={10}
-            className="block w-full mt-1 p-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:border-blue-300 resize-none" // 'resize-none'로 크기 고정
+            className="block w-full mt-1 p-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:border-blue-300 resize-none"
           ></textarea>
         </label>
         <div className="flex justify-end">
