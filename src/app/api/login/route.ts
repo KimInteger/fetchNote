@@ -10,6 +10,7 @@ export async function POST(request: Request) {
   console.log('Request data:', { email, password });
 
   try {
+    // 이메일로 사용자 조회
     const result = await pool.query('SELECT * FROM users WHERE email = $1', [
       email,
     ]);
@@ -25,6 +26,7 @@ export async function POST(request: Request) {
       );
     }
 
+    // 비밀번호 비교
     const match = await bcrypt.compare(password, user.password);
     console.log('Password match result:', match);
 
@@ -36,8 +38,9 @@ export async function POST(request: Request) {
       );
     }
 
+    // JWT 토큰 생성, admin 필드 추가
     const token = jwt.sign(
-      { id: user.id, email: user.email },
+      { id: user.id, email: user.email, admin: user.admin }, // admin 필드 추가
       process.env.JWT_SECRET || 'your_jwt_secret',
       { expiresIn: '1h' },
     );
