@@ -2,10 +2,11 @@
 
 import React, { useState, useEffect } from 'react';
 import LoginForm from '../loginForm';
+import { useAuth } from '../context/AuthContext';
 
 const HeaderSection: React.FC = () => {
   const [isLogin, setIsLogin] = useState<boolean>(false);
-  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
+  const { isAuthenticated, setIsAuthenticated } = useAuth();
 
   // 로그인 상태 확인
   useEffect(() => {
@@ -13,7 +14,7 @@ const HeaderSection: React.FC = () => {
     if (token) {
       setIsAuthenticated(true);
     }
-  }, []);
+  }, [setIsAuthenticated]);
 
   const handleLogin = () => {
     setIsLogin(true);
