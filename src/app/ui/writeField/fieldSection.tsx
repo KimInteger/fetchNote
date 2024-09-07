@@ -1,32 +1,32 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { jwtDecode, JwtPayload } from 'jwt-decode';
-
-// 사용 시
+import { useAuth } from '../context/AuthContext';
+import { jwtDecode } from 'jwt-decode';
 
 const WriteFieldSection: React.FC = () => {
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const [isAdmin, setIsAdmin] = useState(false);
+  const { isAuthenticated } = useAuth();
 
-  interface CustomJwtPayload extends JwtPayload {
+  interface CustomJwtPayload {
     admin?: boolean;
   }
 
   useEffect(() => {
-    // JWT 토큰을 가져와서 admin 상태 확인
-    const token = localStorage.getItem('token');
-
-    if (token) {
-      try {
-        const decoded = jwtDecode<CustomJwtPayload>(token);
-        setIsAdmin(decoded.admin || false);
-      } catch (error) {
-        console.error('Invalid token:', error);
+    if (isAuthenticated) {
+      const token = localStorage.getItem('token');
+      if (token) {
+        try {
+          const decoded = jwtDecode<CustomJwtPayload>(token);
+          setIsAdmin(decoded.admin || false);
+        } catch (error) {
+          console.error('Invalid token:', error);
+        }
       }
     }
-  }, []);
+  }, [isAuthenticated]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -50,7 +50,7 @@ const WriteFieldSection: React.FC = () => {
     console.log('Post saved:', data);
   };
 
-  if (!isAdmin) {
+  if (!isAuthenticated || !isAdmin) {
     return <p>글 작성 권한이 없습니다.</p>;
   }
 
